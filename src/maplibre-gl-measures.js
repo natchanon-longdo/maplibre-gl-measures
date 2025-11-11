@@ -252,7 +252,7 @@ export default class MeasuresControl {
 		btn.type = 'button';
 		switch (mode) {
 			case this._drawCtrl.modes.DRAW_LINE_STRING:
-				btn.title = this.options?.lang?.lengthMeasurementButtonTitle ?? '';
+				btn.title = this.options?.lang?.lengthMeasurementButtonTitle ?? 'วัดระยะทาง';
 				btn.innerHTML = `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                 viewBox="0 0 512 512" xml:space="preserve" style="padding:4px">
                <path d="M503.467,0h-51.2c-4.71,0-8.533,3.814-8.533,8.533v51.2c0,4.719,3.823,8.533,8.533,8.533h16.077
@@ -267,7 +267,7 @@ export default class MeasuresControl {
            </svg>`;
 				break;
 			case this._drawCtrl.modes.DRAW_POLYGON:
-				btn.title = this.options?.lang?.areaMeasurementButtonTitle ?? '';
+				btn.title = this.options?.lang?.areaMeasurementButtonTitle ?? 'วัดขนาดพื้นที่';
 				btn.innerHTML = `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M18 38C18 40.2091 16.2091 42 14 42C11.7909 42 10 40.2091 10 38C10 35.7909 11.7909 34 14 34C16.2091 34 18 35.7909 18 38Z" fill="#333333"/>
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M14 40C15.1046 40 16 39.1046 16 38C16 36.8954 15.1046 36 14 36C12.8954 36 12 36.8954 12 38C12 39.1046 12.8954 40 14 40ZM14 42C16.2091 42 18 40.2091 18 38C18 35.7909 16.2091 34 14 34C11.7909 34 10 35.7909 10 38C10 40.2091 11.7909 42 14 42Z" fill="#333333"/>
@@ -293,7 +293,7 @@ export default class MeasuresControl {
 	initClearBtn() {
 		let btn = document.createElement('button');
 		btn.type = 'button';
-		btn.title = this.options?.lang?.clearMeasurementsButtonTitle ?? '';
+		btn.title = this.options?.lang?.clearMeasurementsButtonTitle ?? 'ล้างผลการวัด';
 		btn.innerHTML = `<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
                             viewBox="0 0 465.311 465.311" style="enable-background:new 0 0 465.311 465.311;padding:5px" xml:space="preserve">
                             <g>
