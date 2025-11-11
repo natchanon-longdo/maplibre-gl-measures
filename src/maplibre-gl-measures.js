@@ -373,7 +373,7 @@ export default class MeasuresControl {
 					],
 				},
 				paint: {
-					'text-color': this.options?.style?.text?.color ?? '#D20C0C',
+					'text-color': ['case', ['==', ['get', 'labelType'], 'center'], '#00744B', this.options?.style?.text?.color ?? '#D20C0C'],
 					'text-halo-color': this.options?.style?.text?.haloColor ?? '#fff',
 					'text-halo-width': this.options?.style?.text?.haloWidth ?? 10,
 				},
@@ -461,6 +461,16 @@ export default class MeasuresControl {
 					};
 					features.push(centroid);
 				} else if (feature.geometry.type == 'LineString') {
+					let totalLength = turf.length(feature) * 1000; //km to m
+					let lineCenter = turf.along(feature, totalLength / 2, {
+						units: 'meters',
+					});
+					lineCenter.properties = {
+						measurement: this._formatMeasure(totalLength),
+						labelType: 'center',
+					};
+					features.push(lineCenter);
+
 					let segments = turf.lineSegment(feature);
 					segments.features.forEach((segment) => {
 						let centroid = turf.centroid(segment);
@@ -470,6 +480,7 @@ export default class MeasuresControl {
 						// let measurement = `${lineLength}\n${thaiLength}`;
 						centroid.properties = {
 							measurement,
+							labelType: 'segment',
 						};
 						features.push(centroid);
 					});
