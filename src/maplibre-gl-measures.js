@@ -176,13 +176,13 @@ export default class MeasuresControl {
 		let wa2 = ((dist % 400) / 4).toFixed(2);
 		let result = '';
 		if (rai > 0) {
-			result += `${rai} ไร่ `;
+			result += `${this._getLocaleNumber(rai)} ไร่ `;
 		}
 		if (ngan > 0) {
-			result += `${ngan} งาน `;
+			result += `${this._getLocaleNumber(ngan)} งาน `;
 		}
 		if (wa2 > 0) {
-			result += `${wa2} ตร.ว.`;
+			result += `${this._getLocaleNumber(wa2)} ตร.ว.`;
 		}
 		return `(${result || '0.00 ตร.ว.'})`;
 	}
