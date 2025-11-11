@@ -9,6 +9,17 @@ const SOURCE_DATA = {
 	type: 'FeatureCollection',
 	features: [],
 };
+
+const LENGTH_UNIT_THAI_LANG = {
+	m: 'ม.',
+	km: 'กม.',
+};
+
+const AREA_UNIT_THAI_LANG = {
+	m2: 'ตร.ม.',
+	km2: 'ตร.กม.',
+};
+
 export default class MeasuresControl {
 	constructor(options) {
 		this.options = options;
@@ -159,9 +170,30 @@ export default class MeasuresControl {
 	}
 
 	// area in sqm
+	_formatAreaToThaiSystem(dist) {
+		let rai = Math.floor(dist / 1600);
+		let ngan = Math.floor((dist % 1600) / 400);
+		let wa2 = ((dist % 400) / 4).toFixed(2);
+		let result = '';
+		if (rai > 0) {
+			result += `${rai} ไร่ `;
+		}
+		if (ngan > 0) {
+			result += `${ngan} งาน `;
+		}
+		if (wa2 > 0) {
+			result += `${wa2} ตร.ว.`;
+		}
+		return `(${result || '0.00 ตร.ว.'})`;
+	}
+
+	// area in sqm
 	_formatAreaToMetricSystem(dist) {
-		let measure = convert(dist).from('m2').toBest({ system: 'metric' });
-		let unit = measure.unit.replaceAll('2', '²');
+		let measure = convert(dist)
+			.from('m2')
+			.toBest({ system: 'metric', exclude: ['mm2', 'cm2', 'ha'] });
+		let unit = AREA_UNIT_THAI_LANG[measure.unit];
+
 		let val = this._getLocaleNumber(measure.val);
 		return `${val} ${unit}`;
 	}
@@ -176,9 +208,19 @@ export default class MeasuresControl {
 	}
 
 	_formatToMetricSystem(dist) {
-		let measure = convert(dist).from('m').toBest({ system: 'metric' });
+		let measure = convert(dist)
+			.from('m')
+			.toBest({ system: 'metric', exclude: ['mm', 'cm'] });
 		let val = this._getLocaleNumber(measure.val);
-		return `${val} ${measure.unit}`;
+		let unit = LENGTH_UNIT_THAI_LANG[measure.unit];
+		return `${val} ${unit}`;
+	}
+
+	// dist in m
+	_formatToThaiSystem(dist) {
+		let wa = (dist / 2).toFixed(2);
+		let val = this._getLocaleNumber(wa);
+		return `(${val} วา)`;
 	}
 
 	_formatToImperialSystem(dist) {
@@ -409,9 +451,11 @@ export default class MeasuresControl {
 		drawnFeatures.features.forEach((feature) => {
 			try {
 				if (feature.geometry.type == 'Polygon') {
-					let area = this._formatMeasure(turf.area(feature), true);
+					const areaInSqm = turf.area(feature);
+					let area = this._formatMeasure(areaInSqm, true);
+					let thaiArea = this._formatAreaToThaiSystem(areaInSqm);
 					let centroid = turf.centroid(feature);
-					let measurement = `${area}`;
+					let measurement = `${area}\n${thaiArea}`;
 					centroid.properties = {
 						measurement,
 					};
@@ -422,6 +466,8 @@ export default class MeasuresControl {
 						let centroid = turf.centroid(segment);
 						let lineLength = this._formatMeasure(turf.length(segment) * 1000); //km to m
 						let measurement = `${lineLength}`;
+						// let thaiLength = this._formatToThaiSystem(turf.length(segment) * 1000); //km to m
+						// let measurement = `${lineLength}\n${thaiLength}`;
 						centroid.properties = {
 							measurement,
 						};
