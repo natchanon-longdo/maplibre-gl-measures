@@ -176,10 +176,10 @@ export default class MeasuresControl {
 		let wa2 = ((dist % 400) / 4).toFixed(2);
 		let result = '';
 		if (rai > 0) {
-			result += `${this._getLocaleNumber(rai)} ไร่ `;
+			result += `${this._getLocaleNumber(rai, false)} ไร่ `;
 		}
 		if (ngan > 0) {
-			result += `${this._getLocaleNumber(ngan)} งาน `;
+			result += `${this._getLocaleNumber(ngan, false)} งาน `;
 		}
 		if (wa2 > 0) {
 			result += `${this._getLocaleNumber(wa2)} ตร.ว.`;
@@ -230,11 +230,11 @@ export default class MeasuresControl {
 		return `${val} ${measure.unit}`;
 	}
 
-	_getLocaleNumber(val) {
+	_getLocaleNumber(val, showFractionDigits = true) {
 		// Format without grouping separator
 		let formattedNumber = val.toLocaleString(undefined, {
-			minimumFractionDigits: 2,
-			maximumFractionDigits: 2,
+			minimumFractionDigits: showFractionDigits ? 2 : 0,
+			maximumFractionDigits: showFractionDigits ? 2 : 0,
 			useGrouping: this.options?.unitsGroupingSeparator ? false : true,
 		});
 
